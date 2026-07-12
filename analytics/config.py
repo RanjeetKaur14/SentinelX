@@ -40,6 +40,15 @@ class TrackerConfig:
     distance_weight: float = 0.6
     iou_weight: float = 0.4
 
+    def __post_init__(self):
+        if self.max_match_distance <= 0:
+            raise ValueError(
+                "max_match_distance must be > 0 -- it's used as a "
+                "divisor when normalizing match cost; 0 or negative "
+                "causes silent division-by-zero (NaN/inf) in the "
+                "tracker's matching cost, not a clean failure."
+            )
+
 
 @dataclass(frozen=True)
 class TrajectoryConfig:
@@ -56,6 +65,16 @@ class TrajectoryConfig:
     # the instantaneous window is below this threshold (pixels/frame).
     stationary_speed_threshold: float = 1.5
 
+    def __post_init__(self):
+        if self.history_length <= 0:
+            raise ValueError(
+                "history_length must be > 0 -- 0 silently disables "
+                "all speed/direction computation (every track reads "
+                "as Stationary forever) rather than failing clearly."
+            )
+        if self.instantaneous_window <= 0:
+            raise ValueError("instantaneous_window must be > 0.")
+
 
 @dataclass(frozen=True)
 class DensityConfig:
@@ -63,6 +82,16 @@ class DensityConfig:
 
     grid_rows: int = 4
     grid_cols: int = 4
+
+    def __post_init__(self):
+        if self.grid_rows <= 0 or self.grid_cols <= 0:
+            raise ValueError(
+                "grid_rows and grid_cols must both be > 0 -- they're "
+                "used as divisors when computing cell size in "
+                "density.py; 0 causes a hard ZeroDivisionError at the "
+                "first frame processed, rather than a clear failure "
+                "at config-construction time."
+            )
 
 
 @dataclass(frozen=True)
