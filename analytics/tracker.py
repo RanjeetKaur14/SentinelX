@@ -211,9 +211,20 @@ class CentroidTracker:
         # (previous centroid -> new centroid), not the prediction --
         # this keeps the constant-velocity estimate anchored to real
         # motion and self-correcting frame over frame.
+        #
+        # Divide by elapsed frames (disappeared + 1), not just 1: if
+        # this track is recovering after N missed frames, the raw
+        # displacement covers N+1 frames' worth of motion, not one.
+        # Using the raw displacement as a one-frame velocity would
+        # overestimate true per-frame speed by a factor of (N+1),
+        # which then poisons the *next* frame's predicted_centroid
+        # (predicted = centroid + velocity * steps) badly enough to
+        # cause a fresh mismatch immediately after a successful
+        # recovery -- this was found via testing, not just inspection.
+        elapsed_frames = track.disappeared + 1
         track.velocity = (
-            new_centroid[0] - track.centroid[0],
-            new_centroid[1] - track.centroid[1],
+            (new_centroid[0] - track.centroid[0]) / elapsed_frames,
+            (new_centroid[1] - track.centroid[1]) / elapsed_frames,
         )
         track.bbox = det.bbox
         track.centroid = new_centroid

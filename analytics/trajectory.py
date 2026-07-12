@@ -84,23 +84,41 @@ class TrajectoryManager:
 
         track.history = list(buf)
 
-        speed, direction = self._compute_speed_and_direction(buf)
-        track.instantaneous_speed = speed
-        track.direction = direction
+        speed, direction, computed = self._compute_speed_and_direction(buf)
+        if computed:
+            track.instantaneous_speed = speed
+            track.direction = direction
+        # else: timestamps didn't advance (duplicate/out-of-order --
+        # a plausible frame-drop/clock-stall scenario on edge hardware
+        # under load). Deliberately hold the track's last known
+        # speed/direction rather than overwriting it with a false
+        # "Stationary" reading -- silently reporting a fast-moving
+        # crowd as stationary during exactly the kind of transient
+        # glitch a real surge could coincide with is a worse failure
+        # mode than briefly reusing a slightly stale value.
         track.average_speed = self._compute_average_speed(buf)
 
     def _compute_speed_and_direction(self, buf: Deque[TimedPoint]):
+        """
+        Returns (speed, direction, computed). `computed` is False when
+        there wasn't enough history yet, or timestamps didn't advance
+        -- in both cases the caller should hold the track's previous
+        reading rather than trust the (0.0, "Stationary") placeholder
+        returned alongside `computed=False`.
+        """
         window = self._config.instantaneous_window
         if len(buf) <= window:
-            return 0.0, "Stationary"
+            return 0.0, "Stationary", False
 
         t_prev, p_prev = buf[-1 - window]
         t_curr, p_curr = buf[-1]
         dt = t_curr - t_prev
         if dt <= 0:
-            # Duplicate/out-of-order timestamps -- treat as no motion
-            # rather than dividing by zero or reporting a bogus spike.
-            return 0.0, "Stationary"
+            # Duplicate/out-of-order timestamps -- can't compute a
+            # speed at all (not even zero, since we don't know how
+            # much time actually passed). Let the caller decide how
+            # to handle it instead of asserting "no motion" here.
+            return 0.0, "Stationary", False
 
         dx = p_curr[0] - p_prev[0]
         dy = p_curr[1] - p_prev[1]
@@ -108,10 +126,10 @@ class TrajectoryManager:
         speed = distance / dt  # pixels/second
 
         if speed < self._config.stationary_speed_threshold:
-            return speed, "Stationary"
+            return speed, "Stationary", True
 
         direction = self._vector_to_direction(dx, dy)
-        return speed, direction
+        return speed, direction, True
 
     def _compute_average_speed(self, buf: Deque[TimedPoint]) -> float:
         if len(buf) < 2:
