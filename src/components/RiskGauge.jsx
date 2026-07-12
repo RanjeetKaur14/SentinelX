@@ -11,15 +11,15 @@ export default function RiskGauge({ score, level }) {
         {/* pulsing outer rings, colored by risk */}
         <div
           className="absolute inset-0 rounded-full animate-pulse2"
-          style={{ boxShadow: `0 0 0 1px ${color}55` }}
+          style={{ boxShadow: `0 0 0 1.5px ${color}` }}
         />
         <div
           className="absolute inset-4 rounded-full"
-          style={{ boxShadow: `0 0 0 1px ${color}33` }}
+          style={{ boxShadow: `0 0 0 1px ${color}66` }}
         />
         <div
           className="absolute inset-8 rounded-full"
-          style={{ boxShadow: `0 0 0 1px ${color}22` }}
+          style={{ boxShadow: `0 0 0 1px ${color}40` }}
         />
 
         {/* rotating sweep */}

@@ -4,18 +4,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        base: '#0B0F10',
-        panel: '#12181A',
-        panel2: '#161D1F',
-        line: '#1F2A2D',
-        ink: '#E7EDEE',
-        muted: '#7C8B8E',
-        signal: '#3ADBC4',
+        base: '#F5F7F7',
+        panel: '#FFFFFF',
+        panel2: '#EEF1F1',
+        line: '#DEE3E3',
+        ink: '#182322',
+        muted: '#68767A',
+        signal: '#12897D',
         risk: {
-          green: '#37D67A',
-          yellow: '#E8C547',
-          orange: '#F2924B',
-          red: '#E5484D'
+          green: '#1E9A5C',
+          yellow: '#B4860F',
+          orange: '#C86A24',
+          red: '#C93B3B'
         }
       },
       fontFamily: {
