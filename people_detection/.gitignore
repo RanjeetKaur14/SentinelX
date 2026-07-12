@@ -9,10 +9,12 @@ __pycache__/
 # VS Code
 .vscode/
 
-# YOLO Weights
+YOLO Weights
 *.pt
 *.onnx
 *.engine
+
+!best.pt
 
 # Generated Detection Outputs
 outputs/
@@ -21,4 +23,11 @@ outputs/
 .DS_Store
 Thumbs.db
 
-scripts/runs
+testing/scripts/runs
+
+yolov8n-head.pt
+yolov8n.pt
+output/output.mp4
+output/annotated_output.mp4
+output/result_v1.mp4
+output/result.mp4
