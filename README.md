@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SentinelX — Dashboard (Team 4)
 
 Ops-room style live dashboard for the SentinelX stampede-prevention system.
@@ -68,3 +69,6 @@ like the JSON coming out of `shared/schemas.py`. To go live:
   dashboard from monitoring into decision support.
 - `npm run build` produces a static `dist/` you can also just double-click
   open, if you need a zero-dependency fallback during the demo.
+=======
+:)
+>>>>>>> origin/main
