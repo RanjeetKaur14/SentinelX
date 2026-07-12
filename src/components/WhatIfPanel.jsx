@@ -1,8 +1,11 @@
 import { useMemo, useState } from 'react'
 import { zones, simulateRedirect } from '../data/mockData'
-import { RISK_COLORS, scoreToLevel } from '../lib/risk'
+import { getRiskColors, scoreToLevel } from '../lib/risk'
+import { useTheme } from '../context/ThemeContext'
 
 export default function WhatIfPanel() {
+  const { isDark } = useTheme()
+  const RISK_COLORS = getRiskColors(isDark)
   const [sourceId, setSourceId] = useState('zone-c')
   const [targetId, setTargetId] = useState('zone-b')
   const [pct, setPct] = useState(30)

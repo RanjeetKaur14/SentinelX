@@ -1,4 +1,11 @@
-export const RISK_COLORS = {
+export const RISK_COLORS_LIGHT = {
+  green: '#1E9A5C',
+  yellow: '#B4860F',
+  orange: '#C86A24',
+  red: '#C93B3B'
+}
+
+export const RISK_COLORS_DARK = {
   green: '#37D67A',
   yellow: '#E8C547',
   orange: '#F2924B',
@@ -12,27 +19,13 @@ export const RISK_LABELS = {
   red: 'Critical'
 }
 
+export function getRiskColors(isDark) {
+  return isDark ? RISK_COLORS_DARK : RISK_COLORS_LIGHT
+}
+
 export function scoreToLevel(score) {
   if (score >= 80) return 'red'
   if (score >= 55) return 'orange'
   if (score >= 30) return 'yellow'
   return 'green'
-}
-
-export function riskTextClass(level) {
-  return {
-    green: 'text-risk-green',
-    yellow: 'text-risk-yellow',
-    orange: 'text-risk-orange',
-    red: 'text-risk-red'
-  }[level]
-}
-
-export function riskBgClass(level) {
-  return {
-    green: 'bg-risk-green',
-    yellow: 'bg-risk-yellow',
-    orange: 'bg-risk-orange',
-    red: 'bg-risk-red'
-  }[level]
 }

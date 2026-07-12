@@ -1,5 +1,6 @@
 import { zones, currentRisk } from '../data/mockData'
-import { RISK_COLORS } from '../lib/risk'
+import { getRiskColors } from '../lib/risk'
+import { useTheme } from '../context/ThemeContext'
 
 function buildInsights() {
   const worst = [...zones].sort((a, b) => b.density - a.density)[0]
@@ -15,6 +16,8 @@ function buildInsights() {
 }
 
 export default function CrowdInsights() {
+  const { isDark } = useTheme()
+  const RISK_COLORS = getRiskColors(isDark)
   const insights = buildInsights()
 
   return (
