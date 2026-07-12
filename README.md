@@ -1,13 +1,13 @@
-# CrowdShield — Dashboard (Team 4)
+# SentinelX — Dashboard (Team 4)
 
-Ops-room style live dashboard for the CrowdShield stampede-prevention system.
+Ops-room style live dashboard for the SentinelX stampede-prevention system.
 React + Vite + Tailwind + Chart.js, running entirely on mock data until the
 backend (Team 3) exposes real endpoints.
 
 ## Run it
 
 ```bash
-cd crowdshield-dashboard
+cd sentinelx-dashboard
 npm install
 npm run dev
 ```

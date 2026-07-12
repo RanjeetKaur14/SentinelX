@@ -19,7 +19,7 @@ export default function TopBar({ level }) {
         </div>
         <div>
           <h1 className="font-display text-lg font-semibold leading-none tracking-tight">
-            CrowdShield
+            SentinelX
           </h1>
           <p className="eyebrow mt-1">Live Ops · Site 04</p>
         </div>
