@@ -1,0 +1,24 @@
+# Virtual Environment
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# VS Code
+.vscode/
+
+# YOLO Weights
+*.pt
+*.onnx
+*.engine
+
+# Generated Detection Outputs
+outputs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+scripts/runs

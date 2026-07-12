@@ -1,0 +1,59 @@
+{
+    "model": "yolov8n.pt",
+    "images_tested": 8,
+    "summary": {
+        "total_persons": 80,
+        "average_confidence": 0.427,
+        "average_inference_time_ms": 110.73
+    },
+    "images": [
+        {
+            "image": "c1.jpg",
+            "persons_detected": 20,
+            "average_confidence": 0.455,
+            "inference_time_ms": 86.67
+        },
+        {
+            "image": "c2.jpg",
+            "persons_detected": 10,
+            "average_confidence": 0.532,
+            "inference_time_ms": 154.79
+        },
+        {
+            "image": "c3.jpg",
+            "persons_detected": 4,
+            "average_confidence": 0.479,
+            "inference_time_ms": 144.82
+        },
+        {
+            "image": "c4.jpg",
+            "persons_detected": 6,
+            "average_confidence": 0.369,
+            "inference_time_ms": 129.05
+        },
+        {
+            "image": "c5.jpg",
+            "persons_detected": 14,
+            "average_confidence": 0.439,
+            "inference_time_ms": 137.32
+        },
+        {
+            "image": "c6.jpg",
+            "persons_detected": 22,
+            "average_confidence": 0.498,
+            "inference_time_ms": 119.96
+        },
+        {
+            "image": "c7.jpg",
+            "persons_detected": 3,
+            "average_confidence": 0.377,
+            "inference_time_ms": 55.31
+        },
+        {
+            "image": "c8.jpg",
+            "persons_detected": 1,
+            "average_confidence": 0.267,
+            "inference_time_ms": 57.94
+        }
+    ]
+}

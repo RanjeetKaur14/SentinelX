@@ -1,0 +1,22 @@
+{
+    "model": "yolov8n.pt",
+    "videos_tested": 2,
+    "videos": [
+        {
+            "video": "v1.mp4",
+            "frames": 336,
+            "duration_seconds": 11.2,
+            "processing_time_seconds": 23.02,
+            "processed_fps": 14.6,
+            "average_frame_time_ms": 68.51
+        },
+        {
+            "video": "v2.mp4",
+            "frames": 1303,
+            "duration_seconds": 21.74,
+            "processing_time_seconds": 116.71,
+            "processed_fps": 11.16,
+            "average_frame_time_ms": 89.57
+        }
+    ]
+}
