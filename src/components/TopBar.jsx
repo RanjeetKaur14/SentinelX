@@ -12,9 +12,9 @@ export default function TopBar({ level }) {
   const color = RISK_COLORS[level]
 
   return (
-    <header className="flex items-center justify-between border-b border-line px-6 py-4">
+    <header className="flex items-center justify-between border-b border-line bg-panel px-6 py-4">
       <div className="flex items-center gap-3">
-        <div className="h-8 w-8 rounded-md border border-signal/40 grid place-items-center">
+        <div className="h-8 w-8 rounded-md border border-signal/40 bg-signal/5 grid place-items-center">
           <span className="h-2.5 w-2.5 rounded-full bg-signal animate-blink" />
         </div>
         <div>

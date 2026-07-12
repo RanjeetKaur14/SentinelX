@@ -17,7 +17,7 @@ export default function Timeline({ labels, data }) {
     datasets: [
       {
         data,
-        borderColor: '#3ADBC4',
+        borderColor: '#12897D',
         borderWidth: 2,
         pointRadius: 0,
         tension: 0.35,
@@ -27,8 +27,8 @@ export default function Timeline({ labels, data }) {
           const { ctx: c, chartArea } = chart
           if (!chartArea) return 'transparent'
           const g = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
-          g.addColorStop(0, 'rgba(58,219,196,0.25)')
-          g.addColorStop(1, 'rgba(58,219,196,0)')
+          g.addColorStop(0, 'rgba(18,137,125,0.18)')
+          g.addColorStop(1, 'rgba(18,137,125,0)')
           return g
         }
       }
@@ -41,8 +41,10 @@ export default function Timeline({ labels, data }) {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: '#12181A',
-        borderColor: '#1F2A2D',
+        backgroundColor: '#FFFFFF',
+        titleColor: '#182322',
+        bodyColor: '#182322',
+        borderColor: '#DEE3E3',
         borderWidth: 1,
         titleFont: { family: 'JetBrains Mono', size: 11 },
         bodyFont: { family: 'JetBrains Mono', size: 11 }
@@ -51,13 +53,13 @@ export default function Timeline({ labels, data }) {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { color: '#7C8B8E', font: { family: 'JetBrains Mono', size: 10 }, maxTicksLimit: 6 }
+        ticks: { color: '#68767A', font: { family: 'JetBrains Mono', size: 10 }, maxTicksLimit: 6 }
       },
       y: {
         min: 0,
         max: 100,
-        grid: { color: '#1F2A2D' },
-        ticks: { color: '#7C8B8E', font: { family: 'JetBrains Mono', size: 10 }, maxTicksLimit: 5 }
+        grid: { color: '#EEF1F1' },
+        ticks: { color: '#68767A', font: { family: 'JetBrains Mono', size: 10 }, maxTicksLimit: 5 }
       }
     }
   }
