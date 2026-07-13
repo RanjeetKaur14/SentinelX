@@ -8,17 +8,14 @@ __pycache__/
 coverage.xml
 htmlcov/
 
-# Virtual Environments
 venv/
 .venv/
 env/
 ENV/
 
-# Environment Variables
 .env
 .env.*
 
-# Python Build
 build/
 dist/
 *.egg-info/
@@ -29,7 +26,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Vite
 dist/
 
 .vscode/
