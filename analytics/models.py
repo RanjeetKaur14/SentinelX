@@ -103,14 +103,26 @@ class Track:
     @property
     def predicted_centroid(self) -> Point:
         """
-        Constant-velocity one-frame-ahead centroid estimate, used by
-        the tracker as the matching anchor instead of the stale last
-        centroid. Falls back to the current centroid when velocity is
-        zero (e.g. brand-new or stationary tracks).
+        Constant-velocity centroid estimate, used by the tracker as
+        the matching anchor instead of the stale last centroid.
+
+        Scales by `disappeared + 1` frames rather than always
+        extrapolating a single frame ahead: a track that has been
+        undetected for several frames needs its position projected
+        forward by that many frames' worth of velocity (velocity is
+        stored as a *per-frame* rate -- see tracker._apply_match's
+        elapsed_frames division), or the prediction lags further and
+        further behind a fast-moving track the longer it's occluded --
+        which defeats the purpose of prediction for exactly the
+        scenario it exists to help (a person briefly occluded while
+        moving fast through a dense crowd). Falls back to the current
+        centroid when velocity is zero (e.g. brand-new or stationary
+        tracks).
         """
+        steps = self.disappeared + 1
         return (
-            self.centroid[0] + self.velocity[0],
-            self.centroid[1] + self.velocity[1],
+            self.centroid[0] + self.velocity[0] * steps,
+            self.centroid[1] + self.velocity[1] * steps,
         )
 
 
