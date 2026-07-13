@@ -29,7 +29,6 @@ def calculate_risk(data: Analytics):
     if metrics.flow.label == "Mixed":
         score += 20
         reasons.append("Mixed/opposing movement detected")
-
     if metrics.occupancy_growth >= 3:
         score += 15
         reasons.append("Rapid occupancy growth")
@@ -39,14 +38,12 @@ def calculate_risk(data: Analytics):
     elif len(metrics.stationary_tracks) > 5 and metrics.people_count > 10:
         score += 5
         reasons.append("Noticeable number of stationary people")
-
     if metrics.entry_exit.total_entry - metrics.entry_exit.total_exit > 10:
         score += 10
         reasons.append("Entries far exceeding exits — crowd building up")
 
     if score > 100:
         score = 100
-
     if score >= 80:
         level = "Red"
     elif score >= 50:
