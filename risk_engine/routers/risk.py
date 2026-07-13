@@ -33,8 +33,6 @@ def check_risk(data: Analytics):
 
 @router.get("/risk/sample")
 def get_sample_risk():
-    # Loads sample_data.json and runs it through the risk engine
-    # Useful for testing without Team Member 2's live API
     with open("sample_data.json") as f:
         raw_data = json.load(f)
 
