@@ -87,9 +87,9 @@ Live Dashboard
 
 ## Project Modules
 
-### Team 1 – Person Detection
+### Module 1 – Person Detection
 
-**Author:** Ranjeet Kaur
+**Author:** Sriza Goel
 
 Responsibilities:
 
@@ -100,9 +100,9 @@ Responsibilities:
 
 ---
 
-### Team 2 – Crowd Analytics
+### Module 2 – Crowd Analytics
 
-**Author:** Sriza Goel
+**Author:** Ranjeet Kaur 
 
 Responsibilities:
 
@@ -115,7 +115,7 @@ Responsibilities:
 
 ---
 
-### Team 3 – Risk Prediction Engine
+### Module 3 – Risk Prediction Engine
 
 **Author:** Khushii Duggal
 
@@ -131,7 +131,7 @@ Responsibilities:
 
 ---
 
-### Team 4 – Dashboard & Visualization
+### Module 4 – Dashboard & Visualization
 
 **Author:** Toyesh Gupta
 
@@ -226,10 +226,10 @@ SentinelX/
 
 | Team Member | Module |
 |------------|-------------------------------|
-| **Ranjeet Kaur** | Team 1 – Person Detection |
-| **Sriza Goel** | Team 2 – Crowd Analytics |
-| **Khushii Duggal** | Team 3 – Risk Prediction Engine |
-| **Toyesh Gupta** | Team 4 – Dashboard & Visualization |
+| **Sriza Goel** | Person Detection |
+| **Ranjeet Kaur** | Crowd Analytics |
+| **Khushii Duggal** | Risk Prediction Engine |
+| **Toyesh Gupta** | Dashboard & Visualization |
 
 ---
 
