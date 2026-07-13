@@ -1,6 +1,6 @@
 # SentinelX
 
-**Predict. Prevent. Protect.**
+**Prevent. Protect. Predict.**
 
 SentinelX is an **Edge AI-powered Crowd Monitoring and Stampede Prevention System** designed to transform existing CCTV cameras into intelligent safety systems. Instead of simply recording footage, SentinelX continuously analyzes crowd behavior in real time to detect potentially dangerous situations and generate early alerts before a stampede or crowd disaster occurs.
 
