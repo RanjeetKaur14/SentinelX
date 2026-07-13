@@ -1,9 +1,3 @@
-"""
-CrowdShield - Person Detection & Tracking Pipeline
-Detects and tracks people in a live video stream (CCTV/webcam) using YOLOv8n,
-outputting structured JSON with bounding boxes, track IDs, and confidence scores.
-"""
-
 import cv2
 import json
 import time
@@ -11,32 +5,21 @@ from datetime import datetime, timezone
 from pathlib import Path
 from ultralytics import YOLO
 
-# ============================================================
-# CONFIG - edit these for your setup
-# ============================================================
-MODEL_PATH = "best.pt"  # your CrowdHuman fine-tuned best.pt - rename to match your actual file
-SOURCE = "testing/datasets/videos/v2.mp4"  # 0 = default webcam, or RTSP URL string, or video file path
-CONF_THRESHOLD = 0.35                 # re-check this against your fine-tuned model's own benchmark numbers
+MODEL_PATH = "best.pt"  
+SOURCE = "testing/datasets/videos/v2.mp4"  
+CONF_THRESHOLD = 0.35                
 IOU_THRESHOLD = 0.5
-TRACKER_CONFIG = "bytetrack.yaml"     # ships with ultralytics, no extra install needed
+TRACKER_CONFIG = "bytetrack.yaml"    
 IMG_SIZE = 640
 
 OUTPUT_DIR = Path("./output")
-LATEST_FRAME_JSON = OUTPUT_DIR / "latest_frame.json"   # overwritten every frame - for a dashboard/API to poll
-SESSION_LOG_JSONL = OUTPUT_DIR / "session_log.jsonl"   # one JSON line per frame - full history
+LATEST_FRAME_JSON = OUTPUT_DIR / "latest_frame.json"  
+SESSION_LOG_JSONL = OUTPUT_DIR / "session_log.jsonl"   
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# ============================================================
-# LOAD MODEL
-# ============================================================
 print(f"Loading model: {MODEL_PATH}")
 model = YOLO(MODEL_PATH)
-
-
-# ============================================================
-# BUILD FRAME JSON
-# ============================================================
 def build_frame_json(frame_id, frame_shape, result, fps):
     height, width = frame_shape[:2]
     detections = []
@@ -72,10 +55,6 @@ def build_frame_json(frame_id, frame_shape, result, fps):
         "detections": detections
     }
 
-
-# ============================================================
-# MAIN LOOP
-# ============================================================
 def run():
     cap = cv2.VideoCapture(SOURCE)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -110,7 +89,7 @@ def run():
                 results = model.track(
                     frame,
                     persist=True,
-                    classes=[0],           # person only
+                    classes=[0],          
                     conf=CONF_THRESHOLD,
                     iou=IOU_THRESHOLD,
                     tracker=TRACKER_CONFIG,
@@ -126,11 +105,9 @@ def run():
 
                 frame_json = build_frame_json(frame_id, frame.shape, result, fps)
 
-                # overwrite latest snapshot - for a dashboard/API to poll live state
                 with open(LATEST_FRAME_JSON, "w") as f:
                     json.dump(frame_json, f, indent=2)
 
-                # append to permanent session log
                 log_file.write(json.dumps(frame_json) + "\n")
                 log_file.flush()
 
