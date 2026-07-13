@@ -1,29 +1,4 @@
-"""
-crowd_metrics.py
------------------
-Computes derived, frame-level crowd metrics from the outputs of the
-other analytics modules (Trajectory, Density, Flow, Heatmap, EntryExit,
-and the rolling analytics buffer).
 
-IMPORTANT: this module ONLY computes metrics. It does NOT implement
-any risk scoring, thresholding-into-alerts, or stampede prediction --
-that is explicitly the downstream Risk Prediction Engine's job. This
-module's contract is "describe the crowd state and its recent trend
-as plain numbers", nothing more. Concretely, this means it deliberately
-does NOT compute congestion index, density gradient, reverse-flow
-percentage, or stationary-cluster detection -- those require a
-judgment call about what the raw numbers *mean* (e.g. "how close is
-too close", "what counts as opposing flow"), which belongs exclusively
-to the Risk Prediction Engine. This module instead exposes the raw
-ingredients those judgments would need: normalized density, a full
-direction histogram, and a plain list of stationary track IDs.
-
-Every metric here is a cheap composition of data the rest of the
-pipeline already computes -- no new detection, no new tracking, no ML.
-That's a deliberate design choice for edge hardware: the "intelligence"
-here is in choosing which cheap statistics are actually predictive of
-stampede risk, not in computational sophistication.
-"""
 
 from typing import Dict, List, Optional, Tuple
 
@@ -32,7 +7,6 @@ from .models import Track, FlowResult, CrowdMetrics, EntryExitStats, HeatmapBund
 
 
 class CrowdMetricsCalculator:
-    """Stateless aggregator -- recomputes from current-frame inputs + buffer each call."""
 
     def __init__(self, config: CrowdMetricsConfig):
         self._config = config
@@ -98,14 +72,9 @@ class CrowdMetricsCalculator:
             heatmap=heatmap_bundle,
         )
 
-    # ------------------------------------------------------------------
-    # Individual metric computations. Kept as small, independently
-    # testable methods rather than one large function.
-    # ------------------------------------------------------------------
 
     @staticmethod
     def _average_speed(tracks: List[Track]) -> float:
-        """Mean instantaneous speed (pixels/second) over active tracks."""
         if not tracks:
             return 0.0
         return sum(t.instantaneous_speed for t in tracks) / len(tracks)
@@ -158,13 +127,4 @@ class CrowdMetricsCalculator:
 
     @staticmethod
     def _stationary_tracks(tracks: List[Track]) -> List[int]:
-        """
-        Plain list of track IDs currently classified Stationary. This
-        is a raw measurement only -- it deliberately does NOT attempt
-        to determine whether any of these tracks are spatially close
-        together (a "cluster"). Whether a set of stationary people
-        constitutes a meaningful cluster -- and whether that's
-        dangerous -- is an interpretation, and belongs to the
-        downstream Risk Prediction Engine.
-        """
         return [t.track_id for t in tracks if t.direction == "Stationary"]
