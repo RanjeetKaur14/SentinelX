@@ -243,7 +243,7 @@ Measured and estimated footprint on a Raspberry Pi 4/5, 64-bit Raspberry Pi OS:
 ## Screenshots
 
 <p align="center">
-  <img src="output/risk_dense.png" width="90%">
+  <img src="output/risk_dense.jpeg" width="90%">
 </p>
 
 <p align="center">
@@ -253,7 +253,7 @@ Measured and estimated footprint on a Raspberry Pi 4/5, 64-bit Raspberry Pi OS:
 ---
 
 <p align="center">
-  <img src="output/risk_moderate.png" width="90%">
+  <img src="output/risk_moderate.jpeg" width="90%">
 </p>
 
 <p align="center">
