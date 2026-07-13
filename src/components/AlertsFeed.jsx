@@ -1,6 +1,9 @@
-import { RISK_COLORS } from '../lib/risk'
+import { getRiskColors } from '../lib/risk'
+import { useTheme } from '../context/ThemeContext'
 
 export default function AlertsFeed({ alerts }) {
+  const { isDark } = useTheme()
+  const RISK_COLORS = getRiskColors(isDark)
   return (
     <div className="panel p-5">
       <div className="flex items-center justify-between">

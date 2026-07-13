@@ -1,4 +1,5 @@
-import { RISK_COLORS } from '../lib/risk'
+import { getRiskColors } from '../lib/risk'
+import { useTheme } from '../context/ThemeContext'
 import { zones } from '../data/mockData'
 import CameraConfig from './CameraConfig'
 
@@ -7,6 +8,8 @@ function zoneFor(zoneId) {
 }
 
 export default function LiveFeed({ cameras, selected, onToggle }) {
+  const { isDark } = useTheme()
+  const RISK_COLORS = getRiskColors(isDark)
   const visible = cameras.filter((c) => selected.includes(c.id))
 
   return (

@@ -1,6 +1,9 @@
-import { RISK_COLORS, RISK_LABELS } from '../lib/risk'
+import { getRiskColors, RISK_LABELS } from '../lib/risk'
+import { useTheme } from '../context/ThemeContext'
 
 export default function RiskGauge({ score, level }) {
+  const { isDark } = useTheme()
+  const RISK_COLORS = getRiskColors(isDark)
   const color = RISK_COLORS[level]
 
   return (
@@ -51,7 +54,7 @@ export default function RiskGauge({ score, level }) {
           <div
             key={l}
             className="h-1.5 rounded-full"
-            style={{ backgroundColor: l === level ? RISK_COLORS[l] : '#1F2A2D' }}
+            style={{ backgroundColor: l === level ? RISK_COLORS[l] : 'rgb(var(--color-line))' }}
           />
         ))}
       </div>

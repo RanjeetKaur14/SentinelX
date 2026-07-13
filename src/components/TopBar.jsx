@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react'
-import { RISK_COLORS, RISK_LABELS } from '../lib/risk'
+import { getRiskColors, RISK_LABELS } from '../lib/risk'
+import { useTheme } from '../context/ThemeContext'
+import ThemeToggle from './ThemeToggle'
 
 export default function TopBar({ level }) {
   const [now, setNow] = useState(new Date())
+  const { isDark } = useTheme()
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000)
     return () => clearInterval(t)
   }, [])
 
   const time = now.toLocaleTimeString('en-US', { hour12: false })
-  const color = RISK_COLORS[level]
+  const color = getRiskColors(isDark)[level]
 
   return (
     <header className="flex items-center justify-between border-b border-line bg-panel px-6 py-4">
@@ -25,7 +28,7 @@ export default function TopBar({ level }) {
         </div>
       </div>
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-4">
         <div
           className="flex items-center gap-2 rounded-full border px-3 py-1.5"
           style={{ borderColor: color + '55', backgroundColor: color + '14' }}
@@ -39,6 +42,7 @@ export default function TopBar({ level }) {
           <p className="font-mono text-sm text-ink">{time}</p>
           <p className="eyebrow mt-0.5">Local Time</p>
         </div>
+        <ThemeToggle />
       </div>
     </header>
   )

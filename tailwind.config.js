@@ -1,21 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
       colors: {
-        base: '#F5F7F7',
-        panel: '#FFFFFF',
-        panel2: '#EEF1F1',
-        line: '#DEE3E3',
-        ink: '#182322',
-        muted: '#68767A',
-        signal: '#12897D',
+        base: 'rgb(var(--color-base) / <alpha-value>)',
+        panel: 'rgb(var(--color-panel) / <alpha-value>)',
+        panel2: 'rgb(var(--color-panel2) / <alpha-value>)',
+        line: 'rgb(var(--color-line) / <alpha-value>)',
+        ink: 'rgb(var(--color-ink) / <alpha-value>)',
+        muted: 'rgb(var(--color-muted) / <alpha-value>)',
+        signal: 'rgb(var(--color-signal) / <alpha-value>)',
         risk: {
-          green: '#1E9A5C',
-          yellow: '#B4860F',
-          orange: '#C86A24',
-          red: '#C93B3B'
+          green: 'rgb(var(--color-risk-green) / <alpha-value>)',
+          yellow: 'rgb(var(--color-risk-yellow) / <alpha-value>)',
+          orange: 'rgb(var(--color-risk-orange) / <alpha-value>)',
+          red: 'rgb(var(--color-risk-red) / <alpha-value>)'
         }
       },
       fontFamily: {
