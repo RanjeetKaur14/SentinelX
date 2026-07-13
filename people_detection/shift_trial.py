@@ -1,12 +1,3 @@
-"""
-CrowdShield - Adaptive Person/Head Detection & Tracking Pipeline
-Detects and tracks people in a live video stream (CCTV/webcam) using YOLOv8n.
-Automatically switches to a head-detection model when the crowd gets dense
-enough that full-body boxes start overlapping/occluding each other, since
-heads survive occlusion far better than full bodies in packed scenes.
-Outputs structured JSON with bounding boxes, track IDs, and confidence scores.
-"""
-
 import cv2
 import json
 import time
@@ -14,38 +5,23 @@ from datetime import datetime, timezone
 from pathlib import Path
 from ultralytics import YOLO
 
-# ============================================================
-# CONFIG - edit these for your setup
-# ============================================================
-PERSON_MODEL_PATH = "yolov8n.pt"          # COCO nano - full body, class 0 = person
-HEAD_MODEL_PATH = "yolov8n-head.pt"       # SCUT-HEAD nano - class 0 = head
-SOURCE = "testing/datasets/videos/v1.mp4"                          # 0 = default webcam, or RTSP URL string, or video file path
-CONF_THRESHOLD = 0.35                      # based on your benchmark's avg confidence (~0.43) for v8n
+PERSON_MODEL_PATH = "yolov8n.pt"          
+HEAD_MODEL_PATH = "yolov8n-head.pt"       
+SOURCE = "testing/datasets/videos/v1.mp4"                       
+CONF_THRESHOLD = 0.35                   
 IOU_THRESHOLD = 0.5
-TRACKER_CONFIG = "bytetrack.yaml"          # ships with ultralytics, no extra install needed
+TRACKER_CONFIG = "bytetrack.yaml"         
 IMG_SIZE = 640
 
-# Hysteresis thresholds on OCCUPIED AREA RATIO (fraction of frame covered by
-# person boxes), not raw count - this is resolution/framing independent, unlike
-# a fixed headcount. These starting values are a reasonable guess, not measured -
-# watch the logged occupied_area_ratio / avg_pairwise_overlap on your real
-# camera footage for a few minutes and tune these to match what actually looks
-# "packed" vs "sparse" in your scene.
-SWITCH_TO_HEAD_ABOVE_DENSITY = 0.35    # switch to head mode once boxes cover >35% of frame
-SWITCH_TO_PERSON_BELOW_DENSITY = 0.20  # switch back once coverage drops below 20%
+SWITCH_TO_HEAD_ABOVE_DENSITY = 0.35   
+SWITCH_TO_PERSON_BELOW_DENSITY = 0.20 
 
 OUTPUT_DIR = Path("./output")
-LATEST_FRAME_JSON = OUTPUT_DIR / "latest_frame.json"   # overwritten every frame - for a dashboard/API to poll
-SESSION_LOG_JSONL = OUTPUT_DIR / "session_log.jsonl"   # one JSON line per frame - full history
+LATEST_FRAME_JSON = OUTPUT_DIR / "latest_frame.json"   
+SESSION_LOG_JSONL = OUTPUT_DIR / "session_log.jsonl"  
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# ============================================================
-# LOAD BOTH MODELS UP FRONT
-# ============================================================
-# Both stay loaded in memory the whole time - reloading a model from disk
-# on every switch would add a multi-second stall each time the crowd
-# crosses the threshold, which defeats the point of a "live" pipeline.
 print(f"Loading person model: {PERSON_MODEL_PATH}")
 person_model = YOLO(PERSON_MODEL_PATH)
 
@@ -57,12 +33,7 @@ MODELS = {
     "head": {"model": head_model, "classes": [0], "label": "head"},
 }
 
-
-# ============================================================
-# BUILD FRAME JSON
-# ============================================================
 def box_iou(a, b):
-    """IoU between two (x1, y1, x2, y2) boxes in the same coordinate space (normalized here)."""
     ax1, ay1, ax2, ay2 = a
     bx1, by1, bx2, by2 = b
 
@@ -79,12 +50,7 @@ def box_iou(a, b):
 
 
 def compute_density_metrics(norm_boxes):
-    """
-    norm_boxes: list of (x1, y1, x2, y2) tuples, normalized 0-1.
-    occupied_area_ratio: sum of box areas / frame area. Can exceed 1.0 when boxes
-        overlap heavily - that's intentional, higher overlap should push it higher.
-    avg_pairwise_overlap: mean IoU across every pair of boxes - direct occlusion signal.
-    """
+ 
     if not norm_boxes:
         return {"occupied_area_ratio": 0.0, "avg_pairwise_overlap": 0.0}
 
@@ -144,23 +110,18 @@ def build_frame_json(frame_id, frame_shape, result, fps, detection_mode):
         "frame_width": width,
         "frame_height": height,
         "processing_fps": round(fps, 2),
-        "detection_mode": detection_mode,   # "person" or "head" - tells downstream code which box scale to expect
+        "detection_mode": detection_mode,  
         "people_count": len(detections),
         "occupied_area_ratio": density["occupied_area_ratio"],
         "avg_pairwise_overlap": density["avg_pairwise_overlap"],
         "detections": detections
     }
 
-
-# ============================================================
-# MAIN LOOP
-# ============================================================
 def run():
     cap = cv2.VideoCapture(SOURCE)
     if not cap.isOpened():
         raise RuntimeError(f"Could not open source: {SOURCE}")
 
-    # ---------- Video Writer ----------
     fps_video = cap.get(cv2.CAP_PROP_FPS)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -178,7 +139,7 @@ def run():
 
     frame_id = 0
     prev_time = time.time()
-    current_mode = "person"   # start in normal person-detection mode
+    current_mode = "person"  
 
     print("Starting live detection. Press Ctrl+C to stop.")
     print(f"Will switch to head mode above {SWITCH_TO_HEAD_ABOVE_DENSITY:.0%} occupied area, "
@@ -214,11 +175,9 @@ def run():
 
                 frame_json = build_frame_json(frame_id, frame.shape, result, fps, current_mode)
 
-                # overwrite latest snapshot - for a dashboard/API to poll live state
                 with open(LATEST_FRAME_JSON, "w") as f:
                     json.dump(frame_json, f, indent=2)
 
-                # append to permanent session log
                 log_file.write(json.dumps(frame_json) + "\n")
                 log_file.flush()
 
@@ -227,7 +186,6 @@ def run():
                       f"Density: {frame_json['occupied_area_ratio']:.3f} | "
                       f"FPS: {frame_json['processing_fps']:>5.1f}")
 
-                # decide the mode for the NEXT frame based on this frame's occupied area ratio
                 density = frame_json["occupied_area_ratio"]
                 if current_mode == "person" and density > SWITCH_TO_HEAD_ABOVE_DENSITY:
                     current_mode = "head"
