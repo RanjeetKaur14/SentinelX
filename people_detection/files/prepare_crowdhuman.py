@@ -1,26 +1,3 @@
-"""
-prepare_crowdhuman.py
-Converts raw CrowdHuman (odgt annotations) into YOLO-format labels for
-single-class ("person") fine-tuning of YOLOv8n. Uses the FULL BODY box
-(fbox), not the head or visible-region box.
-
-Run this in Colab/Kaggle after downloading the dataset. See README_finetune.md
-for how to get the raw files.
-
-Expected input layout:
-    RAW_DIR/
-        Images/                     <- all CrowdHuman images, flat folder
-        annotation_train.odgt
-        annotation_val.odgt
-
-Produces:
-    OUT_DIR/
-        images/train/*.jpg   (symlinked where possible, copied as fallback)
-        images/val/*.jpg
-        labels/train/*.txt
-        labels/val/*.txt
-"""
-
 import json
 import shutil
 from pathlib import Path
@@ -73,9 +50,7 @@ def convert_split(split_name, odgt_path):
             if box.get("extra", {}).get("ignore", 0) == 1:
                 continue
 
-            x, y, w, h = box["fbox"]  # full-body box, absolute pixels [x, y, w, h]
-
-            # clip to image bounds - CrowdHuman has some boxes that overflow the frame
+            x, y, w, h = box["fbox"]  
             x1 = max(0.0, x)
             y1 = max(0.0, y)
             x2 = min(float(img_w), x + w)
@@ -94,7 +69,6 @@ def convert_split(split_name, odgt_path):
             )
             total_boxes += 1
 
-        # write label file even if empty - valid "no person" negative image for training
         (lbl_out / f"{image_id}.txt").write_text("\n".join(yolo_lines))
 
         dst = img_out / f"{image_id}.jpg"
@@ -102,7 +76,6 @@ def convert_split(split_name, odgt_path):
             try:
                 dst.symlink_to(image_path.resolve())
             except OSError:
-                # symlinks need admin/dev mode on Windows - fall back to a real copy
                 shutil.copy2(image_path, dst)
 
     print(f"{split_name}: {total_boxes} boxes written, "
