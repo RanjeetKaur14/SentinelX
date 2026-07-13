@@ -1,7 +1,0 @@
-# CrowdHuman, converted to single-class ("person") YOLO format by prepare_crowdhuman.py
-path: ./crowdhuman_yolo
-train: images/train
-val: images/val
-
-names:
-  0: person
