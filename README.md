@@ -1,70 +1,238 @@
-# SentinelX — Dashboard (Team 4)
+# SentinelX
 
-Ops-room style live dashboard for the SentinelX stampede-prevention system.
-React + Vite + Tailwind + Chart.js, running entirely on mock data until the
-backend (Team 3) exposes real endpoints.
+**Prevent. Protect. Predict.**
 
-## Run it
+SentinelX is an **Edge AI-powered Crowd Monitoring and Stampede Prevention System** designed to transform existing CCTV cameras into intelligent safety systems. Instead of simply recording footage, SentinelX continuously analyzes crowd behavior in real time to detect potentially dangerous situations and generate early alerts before a stampede or crowd disaster occurs.
 
-```bash
-cd sentinelx-dashboard
-npm install
-npm run dev
+The system performs AI inference locally on edge devices, ensuring **low latency**, **privacy preservation**, **reduced operational costs**, and **no dependency on cloud connectivity**.
+
+---
+
+## Problem Statement
+
+Large public gatherings such as railway stations, metro stations, temples, stadiums, concerts, shopping malls, festivals, and college events often become overcrowded. Traditional CCTV systems are reactive—they record incidents but do not help prevent them.
+
+Monitoring dozens of live camera feeds simultaneously is difficult for security personnel, making it challenging to identify hazardous crowd conditions before they escalate into emergencies.
+
+SentinelX addresses this challenge by providing real-time crowd intelligence and proactive risk prediction.
+
+---
+
+## Features
+
+- Real-time person detection
+- Multi-object tracking
+- Crowd density estimation
+- Movement flow analysis
+- Congestion detection
+- Exit blockage monitoring
+- Crowd risk prediction
+- Smart alert generation
+- Live analytics dashboard
+- Edge AI deployment
+
+---
+
+## AI Workflow
+
+```
+Camera
+      ↓
+Frame Capture
+      ↓
+YOLO Person Detection
+      ↓
+ByteTrack Tracking
+      ↓
+Crowd Analytics
+      ↓
+Risk Prediction Engine
+      ↓
+Smart Alert Generation
+      ↓
+Live Dashboard
 ```
 
-Open http://localhost:5173
+---
 
-## What's here
+## Technology Stack
+
+### AI & Computer Vision
+
+- YOLOv11n
+- ByteTrack
+- OpenCV
+- ONNX Runtime
+- OpenVINO (Optional)
+
+### Backend
+
+- FastAPI
+- SQLite
+
+### Frontend
+
+- React
+- Tailwind CSS
+- Chart.js
+
+### Deployment
+
+- Laptop
+- Raspberry Pi
+- Intel NUC
+- NVIDIA Jetson Nano
+
+---
+
+## Project Modules
+
+### Module 1 – Person Detection
+
+**Author:** Sriza Goel
+
+Responsibilities:
+
+- YOLOv11n person detection
+- Person counting
+- Real-time occupancy estimation
+- Frame processing
+
+---
+
+### Module 2 – Crowd Analytics
+
+**Author:** Ranjeet Kaur 
+
+Responsibilities:
+
+- ByteTrack multi-object tracking
+- Crowd density estimation
+- Heatmap generation
+- Movement flow analysis
+- Congestion analysis
+- Crowd behavior analytics
+
+---
+
+### Module 3 – Risk Prediction Engine
+
+**Author:** Khushii Duggal
+
+Responsibilities:
+
+- Crowd risk assessment
+- Risk score calculation
+- Risk level classification
+- Alert generation
+- SQLite database management
+- FastAPI REST APIs
+- Crowd analytics history
+
+---
+
+### Module 4 – Dashboard & Visualization
+
+**Author:** Toyesh Gupta
+
+Responsibilities:
+
+- React dashboard
+- Live camera visualization
+- Risk dashboard
+- Charts and analytics
+- Alert timeline
+- User Interface
+
+---
+
+## Inputs
+
+- CCTV Camera
+- Webcam
+- Recorded Video
+
+---
+
+## Outputs
+
+- People Count
+- Crowd Density
+- Heatmaps
+- Risk Score
+- Smart Alerts
+- Live Dashboard
+- Crowd Analytics
+
+---
+
+## Risk Factors
+
+The risk prediction engine evaluates multiple crowd parameters instead of relying solely on crowd count.
+
+These include:
+
+- Number of people
+- Crowd density
+- Average movement speed
+- Movement direction
+- Opposing movement
+- Congestion level
+- Exit blockage
+- Stationary crowd buildup
+
+These factors are combined to calculate a dynamic crowd risk score.
+
+---
+
+## Expected Outcomes
+
+- Early crowd congestion detection
+- Stampede risk prediction
+- Real-time alerts
+- Privacy-preserving surveillance
+- Low-latency edge AI inference
+- Improved public safety
+
+---
+
+## Future Scope
+
+- Multi-camera tracking
+- Drone-based crowd monitoring
+- Fire and smoke detection
+- Mobile application support
+- Emergency evacuation guidance
+- Digital twin visualization
+- Edge-to-edge camera collaboration
+
+---
+
+## Repository Structure
 
 ```
-src/
-  components/
-    TopBar.jsx          top bar: identity, clock, system status pill
-    SideRail.jsx         left nav rail
-    RiskGauge.jsx        signature radial "sonar sweep" risk instrument
-    StatCard.jsx          headline metric readout
-    CameraGrid.jsx         camera feed placeholders + detection overlay
-    DensityHeatmap.jsx      per-zone density bars
-    AlertsFeed.jsx           live alert timeline
-    Timeline.jsx              20-minute risk score chart (Chart.js)
-    WhatIfPanel.jsx            rule-based redirect simulator (the differentiator feature)
-  data/
-    mockData.js           stand-in for the FastAPI/WebSocket feed
-  lib/
-    risk.js                shared risk-level colors + helpers
+SentinelX/
+│
+├── Detection Module
+├── Crowd Analytics Module
+├── Risk Prediction Module
+├── Dashboard Module
+└── Documentation
 ```
 
-## Design system
+---
 
-- **Colors**: charcoal base (`#0B0F10`), raised panels (`#12181A`), signal
-  teal (`#3ADBC4`) for live/tracking UI, and the risk scale green → yellow →
-  orange → red as the only saturated colors on the page.
-- **Type**: Space Grotesk for headers, Inter for body/labels, **JetBrains
-  Mono for every number** (counts, timestamps, scores) — this is what makes
-  it read as an instrument panel instead of a generic admin template.
-- Full tokens live in `tailwind.config.js`.
+## Team
 
-## Wiring up the real backend
+| Team Member | Module |
+|------------|-------------------------------|
+| **Sriza Goel** | Person Detection |
+| **Ranjeet Kaur** | Crowd Analytics |
+| **Khushii Duggal** | Risk Prediction Engine |
+| **Toyesh Gupta** | Dashboard & Visualization |
 
-Everything the UI needs is read from `src/data/mockData.js`, shaped to look
-like the JSON coming out of `shared/schemas.py`. To go live:
+---
 
-1. Create `src/api/client.js` with real `fetch`/WebSocket calls to Team 3's
-   FastAPI endpoints (people count, zone density, alerts, risk score).
-2. Replace the static imports in `App.jsx` with state populated by that
-   client (`useState` + `useEffect`, or a small WebSocket hook for the
-   camera/zone/alert streams).
-3. Component props are already typed by usage (see each component file) —
-   as long as the real payload matches the mock shape, no component changes
-   are needed.
-4. For live video, swap the placeholder `<div>` in `CameraGrid.jsx` for an
-   `<img>` (MJPEG stream) or `<video>` element pointed at the camera feed URL.
+## License
 
-## Notes for the demo
-
-- The **What-If panel** is the feature to lead with when judges ask "what
-  makes this different from just detecting people" — it's rule-based
-  (`simulateRedirect` in `mockData.js`), cheap to compute, and turns the
-  dashboard from monitoring into decision support.
-- `npm run build` produces a static `dist/` you can also just double-click
-  open, if you need a zero-dependency fallback during the demo.
+This project was developed as part of a Hackathon submission for educational and research purposes.
