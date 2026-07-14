@@ -3,6 +3,8 @@
 // Replace the functions in src/api/client.js with real fetch/WS calls
 // once Team 3 (backend) exposes the endpoints.
 
+import { API_BASE_URL } from '../config'
+
 export const zones = [
   { id: 'zone-a', name: 'Main Entrance', capacity: 800, count: 612, density: 0.76, risk: 'orange' },
   { id: 'zone-b', name: 'Exit Gate B', capacity: 400, count: 118, density: 0.29, risk: 'green' },
@@ -10,13 +12,15 @@ export const zones = [
   { id: 'zone-d', name: 'Food Court', capacity: 500, count: 260, density: 0.52, risk: 'yellow' }
 ]
 
+// streamUrl / statsUrl are only set for cameras with a real backend feed
+// (Team 1's live_server.py). Cameras without them fall back to mock data.
 export const cameras = [
-  { id: 'cam-01', label: 'CAM 01 — Main Entrance', zone: 'zone-a', count: 612, fps: 24, status: 'live' },
-  { id: 'cam-02', label: 'CAM 02 — Central Plaza N', zone: 'zone-c', count: 587, fps: 22, status: 'live' },
-  { id: 'cam-03', label: 'CAM 03 — Central Plaza S', zone: 'zone-c', count: 454, fps: 23, status: 'live' },
-  { id: 'cam-04', label: 'CAM 04 — Exit Gate B', zone: 'zone-b', count: 118, fps: 25, status: 'live' },
-  { id: 'cam-05', label: 'CAM 05 — Food Court', zone: 'zone-d', count: 260, fps: 21, status: 'live' },
-  { id: 'cam-06', label: 'CAM 06 — West Corridor', zone: 'zone-a', count: 89, fps: 24, status: 'degraded' }
+  { id: 'cam-01', label: 'CAM 01 — Main Entrance', zone: 'zone-a', count: 612, fps: 24, status: 'live', streamUrl: `${API_BASE_URL}/video_feed`, statsUrl: `${API_BASE_URL}/api/stats` },
+  { id: 'cam-02', label: 'CAM 02 — Central Plaza N', zone: 'zone-c', count: 587, fps: 22, status: 'live', streamUrl: null, statsUrl: null },
+  { id: 'cam-03', label: 'CAM 03 — Central Plaza S', zone: 'zone-c', count: 454, fps: 23, status: 'live', streamUrl: null, statsUrl: null },
+  { id: 'cam-04', label: 'CAM 04 — Exit Gate B', zone: 'zone-b', count: 118, fps: 25, status: 'live', streamUrl: null, statsUrl: null },
+  { id: 'cam-05', label: 'CAM 05 — Food Court', zone: 'zone-d', count: 260, fps: 21, status: 'live', streamUrl: null, statsUrl: null },
+  { id: 'cam-06', label: 'CAM 06 — West Corridor', zone: 'zone-a', count: 89, fps: 24, status: 'degraded', streamUrl: null, statsUrl: null }
 ]
 
 export const alerts = [
