@@ -143,7 +143,7 @@ See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the full diagram, data flow, and de
 
 ## Demo Video
 
-https://drive.google.com/file/d/1FeKDpo0MTFF213wiEYRrtf67_h5EDE21/view?usp=sharing
+https://drive.google.com/file/d/1poAg_s3NW-empizDp7eCjbpc9gkzDlCl/view?usp=sharing
 
 ## Getting started
 
