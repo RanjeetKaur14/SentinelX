@@ -1,0 +1,1 @@
+python pipeline.py --source ../people_detection/testing/datasets/videos/v1.mp4 --model ../people_detection/best.pt --camera-id cam_01
