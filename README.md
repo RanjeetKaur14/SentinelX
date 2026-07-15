@@ -151,22 +151,69 @@ https://drive.google.com/file/d/1FeKDpo0MTFF213wiEYRrtf67_h5EDE21/view?usp=shari
 
 ```bash
 git clone https://github.com/RanjeetKaur14/SentinelX.git && cd SentinelX
-
-# 1. Person detection
-cd people_detection && pip install -r requirements.txt && python best.py
-
+ 
+# 1. Person detection deps
+cd people_detection && pip install -r requirements.txt
+ 
 # 2. Crowd analytics (tests)
 cd ../crowd_analysis && pip install numpy pytest && pytest test/
-
-# 3. Risk engine (API)
-cd ../risk_engine && pip install -r requirements.txt && uvicorn app:app --reload --host 0.0.0.0 --port 8000
-
-# 4. Dashboard
-cd ../dashboard && npm install && npm run dev
-
-# 5. End-to-end pipeline (all stages, single process)
-cd ../integration && python pipeline.py --source <video_or_0_for_webcam> --model ../people_detection/best.pt --camera-id cam_01
+ 
+# 3. Risk engine deps
+cd ../risk_engine && pip install -r requirements.txt
+ 
+# 4. Dashboard deps
+cd ../dashboard && npm install
+ 
+# 5. Integration deps (same requirements as people_detection, plus FastAPI/uvicorn)
+cd ../integration && pip install -r ../people_detection/requirements.txt
 ```
+
+### Running the live demo
+ 
+Three services, each in its own terminal, **started in this order** (the dashboard calls the risk engine on startup, so bring that up first):
+ 
+```bash
+# Terminal 1 — Risk Engine API (port 8000)
+cd risk_engine
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
+ 
+# Terminal 2 — Detection + tracking + analytics + risk stream (port 8001)
+cd integration
+set SOURCE=..\people_detection\testing\datasets\videos\v1.mp4
+set MODEL_PATH=..\people_detection\best.pt
+set CAMERA_ID=cam_01
+python -m uvicorn stream_server:app --port 8001 --reload
+ 
+# Terminal 3 — Dashboard (port 5173)
+cd dashboard
+npm run dev
+```
+
+Then open **http://localhost:5173**. (`set` above is Windows `cmd`; on macOS/Linux use `export SOURCE=... MODEL_PATH=... CAMERA_ID=...` instead, same variable names.)
+### Changing the video source, model, or camera ID
+ 
+All three are read from environment variables by `integration/stream_server.py` : set them **before** starting Terminal 2 above:
+ 
+| Variable | What it controls | Examples |
+|---|---|---|
+| `SOURCE` | The video feed to process | A file path (`..\people_detection\testing\datasets\videos\v1.mp4`), `0` for the default webcam, or an RTSP URL (`rtsp://<camera-ip>/stream`) |
+| `MODEL_PATH` | Which detector weights to run | `..\people_detection\best.pt` (person model, default): point this at the head model's weights instead once trained for dense-crowd scenes |
+| `CAMERA_ID` | Label for this feed, shown in the dashboard's camera selector | `cam_01`, `cam_02`, etc. : run a second Terminal-2 instance on a different port with a different `CAMERA_ID` to simulate multiple cameras |
+ 
+To switch the video mid-demo: stop Terminal 2 (`Ctrl+C`), re-set `SOURCE` (and `MODEL_PATH`/`CAMERA_ID` if needed), and restart the `uvicorn stream_server:app` command. The dashboard (Terminal 3) and risk engine (Terminal 1) don't need to be restarted.
+ 
+The dashboard itself points at the risk engine via a single line in [`dashboard/src/config.js`](dashboard/src/config.js) (`API_BASE_URL`) : change that if the risk engine runs on a different host/port (e.g. a Pi on the same network instead of `localhost`).
+ 
+### Reproducing evaluation results (offline, no dashboard)
+ 
+For regenerating the benchmark artifacts referenced in [`docs/EVALUATION.md`](docs/EVALUATION.md) : a single batch run over a video file, writing an annotated `.mp4` and a `risk_log.jsonl` instead of streaming live:
+ 
+```bash
+cd integration
+python pipeline.py --source ../people_detection/testing/datasets/videos/v1.mp4 --model ../people_detection/best.pt --camera-id cam_01
+```
+ 
+Output goes to `integration/sentinelx_output/` (`annotated.mp4` + `risk_log.jsonl`). Add `--no-video` to skip writing the annotated video and just get the log. 
 
 #### Sample Inputs
 - `people_detection/testing/` : Benchmark images and videos.
