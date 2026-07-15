@@ -1,0 +1,33 @@
+# Virtual Environment
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# VS Code
+.vscode/
+
+YOLO Weights
+*.pt
+*.onnx
+*.engine
+
+!best.pt
+
+# Generated Detection Outputs
+outputs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+testing/scripts/runs
+
+yolov8n-head.pt
+yolov8n.pt
+output/output.mp4
+output/annotated_output.mp4
+output/result_v1.mp4
+output/result.mp4

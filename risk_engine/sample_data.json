@@ -1,0 +1,52 @@
+{
+  "frame": 20,
+  "tracks": [
+    {"track_id": 0, "centroid": [184.83, 169.51], "speed": 292.43, "direction": "East"},
+    {"track_id": 1, "centroid": [278.28, 217.81], "speed": 319.137, "direction": "East"},
+    {"track_id": 2, "centroid": [194.19, 321.94], "speed": 349.564, "direction": "East"},
+    {"track_id": 3, "centroid": [108.17, 724.45], "speed": 365.461, "direction": "East"},
+    {"track_id": 4, "centroid": [45.95, 305.09], "speed": 360.585, "direction": "East"},
+    {"track_id": 5, "centroid": [29.58, 320.54], "speed": 334.307, "direction": "East"}
+  ],
+  "crowd_metrics": {
+    "people_count": 6,
+    "average_speed": 336.914,
+    "occupancy_growth": 2.0,
+    "zone_growth": [[0.0,0.0,0.0,0.0],[2.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]],
+    "density": {
+      "zone_1": 2, "zone_2": 0, "zone_3": 0, "zone_4": 0,
+      "zone_5": 3, "zone_6": 0, "zone_7": 0, "zone_8": 0,
+      "zone_9": 1, "zone_10": 0, "zone_11": 0, "zone_12": 0,
+      "zone_13": 0, "zone_14": 0, "zone_15": 0, "zone_16": 0
+    },
+    "normalized_density": {
+      "zone_1": 0.000015, "zone_2": 0.0, "zone_3": 0.0, "zone_4": 0.0,
+      "zone_5": 0.000023, "zone_6": 0.0, "zone_7": 0.0, "zone_8": 0.0,
+      "zone_9": 0.000008, "zone_10": 0.0, "zone_11": 0.0, "zone_12": 0.0,
+      "zone_13": 0.0, "zone_14": 0.0, "zone_15": 0.0, "zone_16": 0.0
+    },
+    "flow": {
+      "label": "Uniform",
+      "confidence": 1.0,
+      "dominant_heading": 0.0,
+      "entropy": 0.0,
+      "direction_histogram": {
+        "East": 6, "North-East": 0, "North": 0, "North-West": 0,
+        "West": 0, "South-West": 0, "South": 0, "South-East": 0, "Stationary": 0
+      }
+    },
+    "stationary_tracks": [],
+    "entry_exit": {
+      "total_entry": 3,
+      "total_exit": 0,
+      "per_line": {
+        "mid_line": {"entry_count": 3, "exit_count": 0}
+      }
+    },
+    "heatmap": {
+      "fast": [[2.0,0.0,0.0,0.0],[2.973,0.0,0.0,0.0],[0.999,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]],
+      "slow": [[1.319,0.0,0.0,0.0],[1.366,0.0,0.0,0.0],[0.512,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]],
+      "trend": [[0.681,0.0,0.0,0.0],[1.607,0.0,0.0,0.0],[0.487,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]]
+    }
+  }
+}

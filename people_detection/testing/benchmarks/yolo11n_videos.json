@@ -1,0 +1,22 @@
+{
+    "model": "yolo11n.pt",
+    "videos_tested": 2,
+    "videos": [
+        {
+            "video": "v1.mp4",
+            "frames": 336,
+            "duration_seconds": 11.2,
+            "processing_time_seconds": 23.14,
+            "processed_fps": 14.52,
+            "average_frame_time_ms": 68.88
+        },
+        {
+            "video": "v2.mp4",
+            "frames": 1303,
+            "duration_seconds": 21.74,
+            "processing_time_seconds": 126.73,
+            "processed_fps": 10.28,
+            "average_frame_time_ms": 97.26
+        }
+    ]
+}

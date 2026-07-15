@@ -36,6 +36,40 @@ upstream ID in), not here.
 from datetime import datetime, timezone
 from typing import Any, Dict
 
+import cv2
+
+
+def frame_timestamp(cap, source, frame_id: int) -> float:
+    """
+    Return the correct timestamp (seconds) to stamp a frame with,
+    for use by trajectory.py's pixels/second speed calculation.
+
+    WHY THIS EXISTS (bug this fixes):
+    build_detector_frame() used to stamp every frame with
+    datetime.now(timezone.utc) -- wall-clock read time. That's correct
+    for a *live* camera (real time elapsing == real motion happening),
+    but wrong for a *recorded video file*: cv2.VideoCapture(path)
+    hands you the next frame immediately regardless of how slow your
+    detection loop is, so the footage's own timeline does NOT stretch
+    just because inference is slow. Stamping file frames with wall
+    clock means a slow loop (e.g. CPU inference at imgsz=960, ~240ms/
+    frame) inflates the measured dt between frames far beyond the
+    video's true ~1/fps frame interval, which craters every track's
+    computed pixels/second speed toward zero -- even though nothing in
+    the actual footage is moving slowly. Confirmed on real footage:
+    switching from wall-clock to video-native timestamps here dropped
+    the frame-median "stationary" track count from 69/136 people to
+    2/136, on the exact same video and detections.
+
+    source == 0 (webcam/RTSP)  -> wall clock (real time IS what matters)
+    source == a file path      -> frame_id / video_fps (content time,
+                                   immune to processing latency)
+    """
+    if source == 0:
+        return datetime.now(timezone.utc).timestamp()
+    fps = cap.get(cv2.CAP_PROP_FPS) or 25.0
+    return frame_id / fps
+
 
 def detector_frame_to_analytics_input(
     detector_frame: Dict[str, Any],

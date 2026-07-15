@@ -74,11 +74,24 @@ def calculate_risk(data: Analytics):
         score += 15
         reasons.append("Moderate crowd density")
 
-    # ---- Rule 2: People count (unchanged from original) -----------
-    if cm.people_count > 150:
+    # ---- Rule 2: People count -----------------------------------
+    # RECALIBRATED for the head detector @ imgsz=960 (was tuned
+    # against the old full-body detector's much lower counts).
+    # Measured on real calm footage (v1.mp4/v2.mp4, 581 frames,
+    # corrected timestamps -- see frame_timestamp() in adapter.py):
+    #   people_count  p50=132  p90=144  p97=149  max=159
+    # The old thresholds (150/80) sat BELOW the calm-footage p50/p90,
+    # so "Large crowd size" was firing on nearly every frame of normal
+    # footage. New thresholds sit with real headroom above the p97 of
+    # calm footage. TUNE against YOUR deployment camera's own calm
+    # baseline before relying on this for a real venue -- raw head
+    # count is very sensitive to camera framing/distance, so these
+    # numbers are a starting point from two hackathon test clips, not
+    # a universal constant.
+    if cm.people_count > 260:
         score += 20
         reasons.append("Very high number of people")
-    elif cm.people_count > 80:
+    elif cm.people_count > 200:
         score += 10
         reasons.append("Large crowd size")
 

@@ -56,13 +56,13 @@ from analytics.config import EngineConfig
 from models import Analytics                                    # risk_engine's pydantic model
 from risk_engine_fixed import calculate_risk                    # OUR fixed version
 from alert_engine import generate_alerts                        # risk_engine's alert generator
-from adapter import detector_frame_to_analytics_input
+from adapter import detector_frame_to_analytics_input, frame_timestamp
 
 
 # ------------------------------------------------------------------
 # 2. DETECTION -> FRAME JSON (same logic as best.py's build_frame_json)
 # ------------------------------------------------------------------
-def build_detector_frame(frame_id, frame_shape, result, fps):
+def build_detector_frame(frame_id, frame_shape, result, fps, timestamp):
     height, width = frame_shape[:2]
     detections = []
     boxes = result.boxes
@@ -79,7 +79,12 @@ def build_detector_frame(frame_id, frame_shape, result, fps):
             })
     return {
         "frame_id": frame_id,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        # Source-aware timestamp (float seconds) -- see
+        # adapter.frame_timestamp() docstring. This used to always be
+        # datetime.now(), which silently corrupted average_speed /
+        # stationary_tracks for recorded-file sources whenever the
+        # loop ran slower than the video's native frame rate.
+        "timestamp": timestamp,
         "frame_width": width,
         "frame_height": height,
         "processing_fps": round(fps, 2),
@@ -145,7 +150,8 @@ def run(source, model_path, camera_id, conf_thres=0.35, iou_thres=0.5,
                 fps = 1.0 / max(now - prev_time, 1e-6)
                 prev_time = now
 
-                detector_frame = build_detector_frame(frame_id, frame.shape, result, fps)
+                ts = frame_timestamp(cap, 0 if str(source) == "0" else source, frame_id)
+                detector_frame = build_detector_frame(frame_id, frame.shape, result, fps, ts)
 
                 # ---- Adapter: detector JSON -> analytics input ----
                 analytics_input = detector_frame_to_analytics_input(

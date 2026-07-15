@@ -1,0 +1,58 @@
+# bytetrack_custom.yaml
+# Tuned from Ultralytics' default bytetrack.yaml to reduce ID churn in
+# dense, heavily-occluded crowd footage (heads constantly blocking each
+# other for a few frames at a time).
+#
+# WHAT CHANGED FROM DEFAULT, AND WHY:
+#
+# track_buffer: 30 -> 90
+#   This is how many frames a "lost" track stays alive waiting to be
+#   re-matched before ByteTrack gives up and lets that ID die. In a dense
+#   crowd, someone's head gets fully blocked by another person for a
+#   handful of frames constantly -- 30 frames (~1 second at 30fps) isn't
+#   enough buffer, so the old ID dies and a new one gets assigned the
+#   moment they reappear. 90 frames (~3 seconds) gives much more room to
+#   reconnect the same person to their original ID after occlusion.
+#
+# new_track_thresh: 0.25 -> 0.3 (was pushed to 0.45, now dialed back)
+#   This controls how easily a detection spawns a BRAND NEW track ID
+#   instead of being considered "maybe this is an existing lost track."
+#   IMPORTANT CORRECTION: 0.45 was too aggressive for dense crowds. This
+#   threshold applies to EVERY detection that isn't already matched to
+#   an existing track -- i.e. every person seen for the first time, or
+#   re-appearing after occlusion breaks the match. In a packed scene
+#   most heads fall in that bucket constantly. With CONF_THRESHOLD=0.25,
+#   any detection between 0.25 and 0.45 that wasn't already tracked was
+#   being silently dropped -- never drawn, never counted. That's why
+#   most of a dense crowd (small/distant heads, which score lower
+#   confidence than close/clear ones) disappeared even though the
+#   detector itself found them. 0.3 keeps a small buffer above the
+#   detector's own floor (so pure noise still can't spawn a track) while
+#   no longer acting as a second, much stricter recall filter on top of
+#   CONF_THRESHOLD. If you see more ID churn as a result, that's the
+#   real tradeoff -- raise back toward 0.4 ONLY if you'd rather lose
+#   heads than IDs; the brief said the opposite.
+#
+# match_thresh: 0.8 -> 0.75
+#   Slightly loosened IoU/cost matching threshold -- in a dense crowd,
+#   head boxes shift position more between frames (people are moving
+#   through a packed space) than in a sparse scene, so a slightly looser
+#   match threshold helps reconnect tracks across frames without being
+#   so strict it never matches.
+#
+# Left unchanged: track_high_thresh, track_low_thresh, fuse_score --
+# these are about detection-confidence handling, not identity continuity,
+# and the defaults are reasonable for your detector's confidence range.
+#
+# TUNE FURTHER if needed: if you still see heavy ID churn after this,
+# try track_buffer up to 120-150. If instead you start seeing two
+# DIFFERENT people merge into the same ID (worse problem), back
+# match_thresh down toward 0.8 again.
+
+tracker_type: bytetrack
+track_high_thresh: 0.25
+track_low_thresh: 0.1
+new_track_thresh: 0.3
+track_buffer: 90
+match_thresh: 0.75
+fuse_score: True
