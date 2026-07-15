@@ -10,7 +10,7 @@ Everything in the core safety pipeline executes locally, with no network call in
 - Crowd analytics (density, flow, heatmap, entry/exit, occupancy growth) — pure Python/NumPy, no external calls
 - Risk scoring (rule-based additive engine) - pure Python, no external calls
 - The FastAPI REST layer (`risk`, `alerts`, `stats`, `history`) - served on the local device/LAN
-- The React dashboard - SEEEEEEE THISSSSS
+
 
 None of the above requires internet connectivity to function. The system was designed to run entirely offline on a Raspberry Pi.
 
