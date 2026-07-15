@@ -278,7 +278,7 @@ https://drive.google.com/file/d/1FeKDpo0MTFF213wiEYRrtf67_h5EDE21/view?usp=shari
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/SentinelX.git
+git clone https://github.com/RanjeetKaur14/SentinelX.git
 cd SentinelX
 ```
 
